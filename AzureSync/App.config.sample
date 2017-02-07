@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="azureSync" type="AzureSync.AzureSyncConfiguration, AzureSync" />
+  </configSections>
+
+  <azureSync syncFolder="C:\azuresync" serviceUrl="http://127.0.0.1:23432" connectionString="DefaultEndpointsProtocol=https;AccountName=xxxxx;AccountKey=xxxxx">
+    <mimeTypes>
+      <add ext=".txt" contentType="text/plain" />
+	  <add ext=".pdf" contentType="application/pdf" />
+    </mimeTypes>
+  </azureSync>
+
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6.2" />
+  </startup>
+</configuration>
