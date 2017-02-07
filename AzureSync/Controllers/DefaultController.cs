@@ -1,7 +1,7 @@
-﻿using System;
+﻿using AzureSync.Models;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Web.Http;
 
 namespace AzureSync.Controllers
@@ -59,9 +59,9 @@ namespace AzureSync.Controllers
         /// Returns a list of files currently in the sync folder.
         /// </summary>
         [HttpGet, Route("folder/files")]
-        public IEnumerable<string> GetFolderFiles()
+        public IEnumerable<FolderFile> GetFolderFiles()
         {
-            var result = new List<string>();
+            var result = new List<FolderFile>();
             FileUtility.GetFolderFilesRecursive(result, GetFolder());
             return result;
         }
@@ -76,8 +76,6 @@ namespace AzureSync.Controllers
 
             int result = azure.UploadFolder(GetFolder());
 
-            Program.ConsoleWriteLine("[{0:yyyy-MM-dd HH:mm:ss}] Sync complete. Files uploaded: {1}", DateTime.Now, result);
-
             return result;
         }
 
@@ -85,7 +83,7 @@ namespace AzureSync.Controllers
         /// Returns a list of files currenlty in the Azure container.
         /// </summary>
         [HttpGet, Route("azure/files")]
-        public IEnumerable<string> GetAzureFiles()
+        public IEnumerable<AzureFile> GetAzureFiles()
         {
             var azure = AzureConnection.Open();
             return azure.ListFiles();
@@ -101,10 +99,35 @@ namespace AzureSync.Controllers
 
             var azure = AzureConnection.Open();
             int result = azure.DownloadFolder(GetFolder());
-            Program.ConsoleWriteLine("[{0:yyyy-MM-dd HH:mm:ss}] Sync complete. Files downloaded: {1}", DateTime.Now, result);
 
             FolderWatcher.Current.Start();
 
+            return result;
+        }
+
+        [HttpGet, Route("azure/table")]
+        public IEnumerable<SyncTableItem> GetSyncTable()
+        {
+            var azure = AzureConnection.Open();
+
+            var result = azure.QuerySyncTable().Select(x => new SyncTableItem()
+            {
+                ContainerName = x.PartitionKey,
+                Name = x.DecodeName(),
+                LocalPath = x.LocalPath,
+                LastSyncUtc = x.LastSyncUtc,
+                LocalLastModifiedUtc = x.LocalLastModifiedUtc,
+                RemoteLastModifiedUtc = x.RemoteLastModifiedUtc
+            });
+
+            return result;
+        }
+
+        [HttpGet, Route("azure/table/clear")]
+        public int ClearSyncTable()
+        {
+            var azure = AzureConnection.Open();
+            int result = azure.ClearSyncTable();
             return result;
         }
     }

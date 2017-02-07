@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AzureSync.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -6,11 +7,17 @@ namespace AzureSync
 {
     public static class FileUtility
     {
-        public static void GetFolderFilesRecursive(List<string> list, string dir)
+        public static void GetFolderFilesRecursive(List<FolderFile> list, string dir)
         {
             foreach (var file in Directory.GetFiles(dir))
             {
-                list.Add(file);
+                var folderFile = new FolderFile()
+                {
+                    Path = file,
+                    Name = Path.GetFileName(file),
+                    LastModifiedUTC = File.GetLastWriteTimeUtc(file)
+                };
+                list.Add(folderFile);
             }
 
             foreach (var subdir in Directory.GetDirectories(dir))

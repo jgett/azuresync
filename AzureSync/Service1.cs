@@ -40,8 +40,8 @@ namespace AzureSync
             count = controller.SyncAzureFiles();
             Program.ConsoleWriteLine("[{0:yyyy-MM-dd HH:mm:ss}] Azure sync: Files downloaded: {1}", DateTime.Now, count);
 
-            count = controller.SyncFolderFiles();
-            Program.ConsoleWriteLine("[{0:yyyy-MM-dd HH:mm:ss}] Folder sync: Files uploaded: {1}", DateTime.Now, count);
+            //count = controller.SyncFolderFiles();
+            //Program.ConsoleWriteLine("[{0:yyyy-MM-dd HH:mm:ss}] Folder sync: Files uploaded: {1}", DateTime.Now, count);
         }
 
         private void Current_Changed(object sender, FileSystemEventArgs e)

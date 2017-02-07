@@ -127,6 +127,12 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureSync.Models\AzureSync.Models.csproj">
+      <Project>{a68e2e65-4e7e-4126-8d7f-0ab6fbcc1cfa}</Project>
+      <Name>AzureSync.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
